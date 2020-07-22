@@ -1,0 +1,9 @@
+C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Debug\GEGUI.exe.config
+C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Debug\GEGUI.exe
+C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Debug\GEGUI.pdb
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.csprojAssemblyReference.cache
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.Properties.Resources.resources
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.csproj.GenerateResource.cache
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.exe
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.pdb
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.GE_GUI.resources
