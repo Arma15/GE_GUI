@@ -54,11 +54,16 @@
             this.label10 = new System.Windows.Forms.Label();
             this.FolderPath = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.WorkingPose = new System.Windows.Forms.TextBox();
+            this.RobotPose = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.SubJobName = new System.Windows.Forms.TextBox();
+            this.RemoveTool = new System.Windows.Forms.Button();
+            this.ToolRemove = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.NewPartNumberbtn = new System.Windows.Forms.Button();
+            this.SetPartNumberbtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // PartNumber
@@ -86,7 +91,7 @@
             this.ItemDescription.Name = "ItemDescription";
             this.ItemDescription.ReadOnly = true;
             this.ItemDescription.Size = new System.Drawing.Size(452, 26);
-            this.ItemDescription.TabIndex = 4;
+            this.ItemDescription.TabIndex = 3;
             // 
             // Hcat
             // 
@@ -103,7 +108,7 @@
             this.AddAllBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AddAllBtn.Name = "AddAllBtn";
             this.AddAllBtn.Size = new System.Drawing.Size(198, 46);
-            this.AddAllBtn.TabIndex = 16;
+            this.AddAllBtn.TabIndex = 14;
             this.AddAllBtn.Text = "Add Data";
             this.AddAllBtn.UseVisualStyleBackColor = true;
             this.AddAllBtn.Click += new System.EventHandler(this.AddAllBtn_Click);
@@ -165,7 +170,7 @@
             this.CameraJob.Name = "CameraJob";
             this.CameraJob.ReadOnly = true;
             this.CameraJob.Size = new System.Drawing.Size(452, 26);
-            this.CameraJob.TabIndex = 5;
+            this.CameraJob.TabIndex = 4;
             // 
             // ToolResult
             // 
@@ -174,7 +179,7 @@
             this.ToolResult.Name = "ToolResult";
             this.ToolResult.ReadOnly = true;
             this.ToolResult.Size = new System.Drawing.Size(202, 26);
-            this.ToolResult.TabIndex = 11;
+            this.ToolResult.TabIndex = 10;
             // 
             // LoopUpBtn
             // 
@@ -182,7 +187,7 @@
             this.LoopUpBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.LoopUpBtn.Name = "LoopUpBtn";
             this.LoopUpBtn.Size = new System.Drawing.Size(186, 60);
-            this.LoopUpBtn.TabIndex = 3;
+            this.LoopUpBtn.TabIndex = 39;
             this.LoopUpBtn.Text = "Lookup";
             this.LoopUpBtn.UseVisualStyleBackColor = true;
             this.LoopUpBtn.Click += new System.EventHandler(this.LookUpBtn_Click);
@@ -194,7 +199,7 @@
             this.EdhrTag.Name = "EdhrTag";
             this.EdhrTag.ReadOnly = true;
             this.EdhrTag.Size = new System.Drawing.Size(162, 26);
-            this.EdhrTag.TabIndex = 12;
+            this.EdhrTag.TabIndex = 11;
             // 
             // MiniPreview
             // 
@@ -212,10 +217,10 @@
             this.AddTagBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AddTagBtn.Name = "AddTagBtn";
             this.AddTagBtn.Size = new System.Drawing.Size(114, 35);
-            this.AddTagBtn.TabIndex = 14;
+            this.AddTagBtn.TabIndex = 13;
             this.AddTagBtn.Text = "Add";
             this.AddTagBtn.UseVisualStyleBackColor = true;
-            this.AddTagBtn.Click += new System.EventHandler(this.AddTagBtn_Click);
+            this.AddTagBtn.Click += new System.EventHandler(this.AddToolBtn_Click);
             // 
             // ApproachSide
             // 
@@ -224,7 +229,7 @@
             this.ApproachSide.Name = "ApproachSide";
             this.ApproachSide.ReadOnly = true;
             this.ApproachSide.Size = new System.Drawing.Size(162, 26);
-            this.ApproachSide.TabIndex = 7;
+            this.ApproachSide.TabIndex = 6;
             // 
             // PounceRegion
             // 
@@ -233,7 +238,7 @@
             this.PounceRegion.Name = "PounceRegion";
             this.PounceRegion.ReadOnly = true;
             this.PounceRegion.Size = new System.Drawing.Size(162, 26);
-            this.PounceRegion.TabIndex = 8;
+            this.PounceRegion.TabIndex = 7;
             // 
             // label7
             // 
@@ -266,9 +271,8 @@
             this.TypeCmb.Location = new System.Drawing.Point(843, 408);
             this.TypeCmb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TypeCmb.Name = "TypeCmb";
-            this.TypeCmb.Size = new System.Drawing.Size(58, 28);
-            this.TypeCmb.TabIndex = 13;
-            this.TypeCmb.SelectedIndexChanged += new System.EventHandler(this.TypeCmb_SelectedIndexChanged);
+            this.TypeCmb.Size = new System.Drawing.Size(70, 28);
+            this.TypeCmb.TabIndex = 12;
             // 
             // label9
             // 
@@ -287,7 +291,7 @@
             this.ToolName.Name = "ToolName";
             this.ToolName.ReadOnly = true;
             this.ToolName.Size = new System.Drawing.Size(178, 26);
-            this.ToolName.TabIndex = 10;
+            this.ToolName.TabIndex = 9;
             // 
             // label10
             // 
@@ -317,14 +321,14 @@
             this.label11.TabIndex = 31;
             this.label11.Text = "Folder Path";
             // 
-            // WorkingPose
+            // RobotPose
             // 
-            this.WorkingPose.Location = new System.Drawing.Point(134, 226);
-            this.WorkingPose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.WorkingPose.Name = "WorkingPose";
-            this.WorkingPose.ReadOnly = true;
-            this.WorkingPose.Size = new System.Drawing.Size(452, 26);
-            this.WorkingPose.TabIndex = 6;
+            this.RobotPose.Location = new System.Drawing.Point(134, 226);
+            this.RobotPose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.RobotPose.Name = "RobotPose";
+            this.RobotPose.ReadOnly = true;
+            this.RobotPose.Size = new System.Drawing.Size(452, 26);
+            this.RobotPose.TabIndex = 5;
             // 
             // label12
             // 
@@ -363,18 +367,76 @@
             this.SubJobName.Name = "SubJobName";
             this.SubJobName.ReadOnly = true;
             this.SubJobName.Size = new System.Drawing.Size(130, 26);
-            this.SubJobName.TabIndex = 9;
+            this.SubJobName.TabIndex = 8;
+            // 
+            // RemoveTool
+            // 
+            this.RemoveTool.Location = new System.Drawing.Point(12, 1057);
+            this.RemoveTool.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.RemoveTool.Name = "RemoveTool";
+            this.RemoveTool.Size = new System.Drawing.Size(114, 56);
+            this.RemoveTool.TabIndex = 36;
+            this.RemoveTool.Text = "Remove Tool";
+            this.RemoveTool.UseVisualStyleBackColor = true;
+            this.RemoveTool.Click += new System.EventHandler(this.RemoveTool_Click);
+            // 
+            // ToolRemove
+            // 
+            this.ToolRemove.Location = new System.Drawing.Point(134, 1082);
+            this.ToolRemove.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.ToolRemove.Name = "ToolRemove";
+            this.ToolRemove.Size = new System.Drawing.Size(178, 26);
+            this.ToolRemove.TabIndex = 37;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(134, 1057);
+            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(85, 20);
+            this.label15.TabIndex = 38;
+            this.label15.Text = "Tool Name";
+            // 
+            // NewPartNumberbtn
+            // 
+            this.NewPartNumberbtn.Location = new System.Drawing.Point(717, 102);
+            this.NewPartNumberbtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.NewPartNumberbtn.Name = "NewPartNumberbtn";
+            this.NewPartNumberbtn.Size = new System.Drawing.Size(186, 60);
+            this.NewPartNumberbtn.TabIndex = 40;
+            this.NewPartNumberbtn.Text = "New Part Number";
+            this.NewPartNumberbtn.UseVisualStyleBackColor = true;
+            this.NewPartNumberbtn.Click += new System.EventHandler(this.NewPartNumberbtn_Click);
+            // 
+            // SetPartNumberbtn
+            // 
+            this.SetPartNumberbtn.Enabled = false;
+            this.SetPartNumberbtn.Location = new System.Drawing.Point(594, 101);
+            this.SetPartNumberbtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.SetPartNumberbtn.Name = "SetPartNumberbtn";
+            this.SetPartNumberbtn.Size = new System.Drawing.Size(81, 31);
+            this.SetPartNumberbtn.TabIndex = 40;
+            this.SetPartNumberbtn.Text = "Set";
+            this.SetPartNumberbtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.SetPartNumberbtn.UseVisualStyleBackColor = true;
+            this.SetPartNumberbtn.Click += new System.EventHandler(this.SetPartNumberbtn_Click);
             // 
             // GE_GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(933, 1148);
+            this.ClientSize = new System.Drawing.Size(940, 1148);
+            this.Controls.Add(this.SetPartNumberbtn);
+            this.Controls.Add(this.NewPartNumberbtn);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.ToolRemove);
+            this.Controls.Add(this.RemoveTool);
             this.Controls.Add(this.SubJobName);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.label12);
-            this.Controls.Add(this.WorkingPose);
+            this.Controls.Add(this.RobotPose);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.FolderPath);
             this.Controls.Add(this.label10);
@@ -437,11 +499,16 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox FolderPath;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox WorkingPose;
+        private System.Windows.Forms.TextBox RobotPose;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox SubJobName;
+        private System.Windows.Forms.Button RemoveTool;
+        private System.Windows.Forms.TextBox ToolRemove;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Button NewPartNumberbtn;
+        private System.Windows.Forms.Button SetPartNumberbtn;
     }
 }
 

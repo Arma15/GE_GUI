@@ -3,91 +3,30 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace GEGUI
 {
     public partial class GE_GUI : Form
     {
-        public class Tool
-        {
-            public string SubjobName;
-            public string ToolName;
-            public string Value;
-            public string Tag;
-            public ToolType Type;
-
-            public Tool(string SubName, string name, string val, string tag, int tt)
-            {
-                SubjobName = SubName;
-                ToolName = name;
-                Value = val;
-                Tag = tag;
-                Type = (ToolType)tt;
-            }
-
-            public Tool(string SubName, string name, string val, string tag, string tt)
-            {
-                SubjobName = SubName;
-                ToolName = name;
-                Value = val;
-                Tag = tag;
-
-                switch (tt.ToLower())
-                {
-                    case "pf":
-                        Type = ToolType.PF;
-                        break;
-                    case "ocr":
-                        Type = ToolType.OCR;
-                        break;
-                    case "qr":
-                        Type = ToolType.QR;
-                        break;
-                }
-            }
-
-            public override string ToString()
-            {
-                return SubjobName + ":" + ToolName + ":" + Value + ":" + Tag + ":" + Type.ToString();
-            }
-        }
-
-        public enum ToolType
-        {
-            PF,
-            OCR,
-            QR
-        }
-
         public bool LookupModel;
-        public string[] DataFiles;
-        private bool _newHcat;
-        private bool _newPartNumber;
+        public List<string> DataFiles;
+        private bool _newTools;
         private List<string> _currData;
         private string _currHcat;
         private string _currPartNum;
-        private string _currCameraJob;
-        private string _currApproachSide;
-        private string _currPounceRegion;
-        private List<Tool> _currTools;
         private string _currPath;
-        private string _currItemDescription;
-        private string _currWorkingPose;
-        private string _currType;
-        private string _currPreview;
-        private int _currIndex;
+        private GE_Label _currLabel;
+        private HCAT _HCAT;
 
         public GE_GUI()
         {
             InitializeComponent();
+            _HCAT = new HCAT();
             _currData = new List<string>();
-            _currTools = new List<Tool>();
-            _newHcat = false;
-            _newPartNumber = false;
             FolderPath.Text = @"C:\Users\kflor\OneDrive\Desktop\GEFiles\Hcat_Data";
             Hcat.Text = "H45601EA";
             PartNumber.Text = "5778198(E95)";
-            _currIndex = 0;
         }
 
         private void Model_TextChanged(object sender, EventArgs e)
@@ -99,16 +38,11 @@ namespace GEGUI
             }
         }
 
-        private void TypeCmb_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (TypeCmb.SelectedIndex > 0)
-            {
-                _currType = TypeCmb.SelectedItem.ToString();
-            }
-        }
-
-        // string[] lines = File.ReadAllLines(textFile);
-
+        /// <summary>
+        /// Load data from file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LookUpBtn_Click(object sender, EventArgs e)
         {
             if (LoopUpBtn.Text.ToLower() == "lookup")
@@ -119,74 +53,89 @@ namespace GEGUI
                     return;
                 }
                 _currPath = FolderPath.Text;
+
                 if (Hcat.Text.Trim().Length < 1)
                 {
                     MessageBox.Show("Hcat Field Empty.");
                     return;
                 }
-                string hcat = Hcat.Text.Trim();
-
+                _currHcat = Hcat.Text.Trim();
+                _HCAT.HcatNumber = Hcat.Text.Trim();
                 if (PartNumber.Text.Trim().Length < 1)
                 {
                     MessageBox.Show("Part Number Field Empty.");
                     return;
                 }
-                ToggleFields(false);
                 _currPartNum = PartNumber.Text.Trim();
-                _currHcat = hcat;
-                DataFiles = Directory.GetFiles(_currPath, "*.txt");
-                bool exists = false;
-
-                for (int i = 0; i < DataFiles.Length; ++i)
+                bool hcatExists = false;
+                bool partNumberExists = false;
+                if (_HCAT.Labels.Count < 1)
                 {
-                    string filename = Path.GetFileName(DataFiles[i]);
-                    if (filename == (hcat + ".txt"))
+                    DataFiles = new List<string>(Directory.GetFiles(_currPath, "*.txt"));
+                    hcatExists = LoadAllData(DataFiles);
+                }
+
+                ToggleFields(false);
+                foreach (GE_Label lab in _HCAT.Labels)
+                {
+                    if (lab.PartNumber.ToLower() == _currPartNum.ToLower())
                     {
-                        exists = true;
-                        _currIndex = i;
-                        break;
+                        _currLabel = lab;
+                        partNumberExists = true;
                     }
                 }
 
-                if (!exists)
+                if (!hcatExists)
                 {
-                    MessageBox.Show($"Hcat file not found, new file for {Hcat.Text} will be created.");
-                    _newHcat = true;
-                    _newPartNumber = true;
-                }
-                else
-                {
-                    _currData = new List<string>(GetFileData(hcat));
-                    if (_currData.Count < 1)
-                    {
-                        MessageBox.Show($"Hcat file {Hcat.Text} is empty, part number {PartNumber.Text} will be added.");
-                        _newPartNumber = true;
-                    }
-                    else
-                    {
-                        FillDisplay();
-                    }
+                    DialogResult = MessageBox.Show($"Hcat file not found, new file for {Hcat.Text} will be created.");
                 }
 
+                if (!partNumberExists)
+                {
+                    _currLabel = new GE_Label
+                    {
+                        Hcat = Hcat.Text.Trim(),
+                        PartNumber = PartNumber.Text.Trim()
+                    };
+                }
+
+                UpdatePreview();
                 LoopUpBtn.Text = "New Hcat";
             }
             else
             {
                 ClearFields();
                 ToggleFields(true);
-                TypeCmb.SelectedIndex = -1;
-                _newHcat = false;
-                _newPartNumber = false;
                 LoopUpBtn.Text = "Lookup";
-                _currTools.Clear();
+                _currLabel = null;
             }
+        }
+
+        private bool LoadAllData(List<string> dataFiles)
+        {
+            try
+            {
+                foreach (string fileName in dataFiles)
+                {
+                    if (_currPath + @"\" + _currHcat.ToLower() + ".txt" == fileName)
+                    {
+                        _HCAT = (JsonConvert.DeserializeObject<HCAT>(File.ReadAllText(fileName)));
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error when reading from files. Exception: {ex.Message}");
+            }
+            return false;
         }
 
         public void ToggleFields(bool Readonly)
         {
             ItemDescription.ReadOnly = Readonly;
             CameraJob.ReadOnly = Readonly;
-            WorkingPose.ReadOnly = Readonly;
+            RobotPose.ReadOnly = Readonly;
             ApproachSide.ReadOnly = Readonly;
             PounceRegion.ReadOnly = Readonly;
             SubJobName.ReadOnly = Readonly;
@@ -198,19 +147,21 @@ namespace GEGUI
             Hcat.ReadOnly = !Readonly;
             PartNumber.ReadOnly = !Readonly;
         }
-        public bool EmptyFields()
+
+        public bool CheckEmptyFields()
         {
             return ItemDescription.Text.Trim() == "" || CameraJob.Text.Trim() == "" || ApproachSide.Text.Trim() == "" ||
                 PounceRegion.Text.Trim() == "" || SubJobName.Text.Trim() == "" || ToolName.Text.Trim() == "" || ToolResult.Text.Trim() == "" || EdhrTag.Text.Trim() == "" ||
                 TypeCmb.SelectedIndex < 0;
         }
+
         public void ClearFields()
         {
             Hcat.Text = "";
             PartNumber.Text = "";
             ItemDescription.Text = "";
             CameraJob.Text = "";
-            WorkingPose.Text = "";
+            RobotPose.Text = "";
             ApproachSide.Text = "";
             PounceRegion.Text = "";
             SubJobName.Text = "";
@@ -225,108 +176,128 @@ namespace GEGUI
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Current Hcat -> " + _currHcat);
+            sb.AppendLine($"Part Number -> {_currLabel.PartNumber}");
 
-            sb.AppendLine($"Part Number -> {_currPartNum}");
-            sb.AppendLine($"Item Description -> {_currItemDescription}");
-            sb.AppendLine($"Camera Job -> {_currCameraJob}");
-            sb.AppendLine($"Working Pose -> {_currWorkingPose.Replace(';', ',')}");
-            sb.AppendLine($"Approach Side -> {_currApproachSide}");
-            sb.AppendLine($"Pounce Region -> {_currPounceRegion}");
+            _currLabel.ItemDescription = _currLabel.ItemDescription == "" ? ItemDescription.Text.Trim() : _currLabel.ItemDescription;
+            sb.AppendLine($"Item Description -> {_currLabel.ItemDescription}");
+
+            _currLabel.CameraJobName = _currLabel.CameraJobName == "" ? CameraJob.Text.Trim() : _currLabel.CameraJobName;
+            sb.AppendLine($"Camera Job -> {_currLabel.CameraJobName}");
+
+            _currLabel.RobotPose = _currLabel.RobotPose == "" ? RobotPose.Text.Trim() : _currLabel.RobotPose;
+            sb.AppendLine($"Working Pose -> {_currLabel.RobotPose.Replace(';', ',')}");
+
+            _currLabel.ApproachSide = _currLabel.ApproachSide == "" ? ApproachSide.Text.Trim() : _currLabel.ApproachSide;
+            sb.AppendLine($"Approach Side -> {_currLabel.ApproachSide}");
+
+            _currLabel.PounceRegion = _currLabel.PounceRegion == "" ? PounceRegion.Text.Trim() : _currLabel.PounceRegion;
+            sb.AppendLine($"Pounce Region -> {_currLabel.PounceRegion}");
+
             sb.AppendLine($"Inspection Details:");
 
-            foreach (Tool tool in _currTools)
+            foreach (SubJob sj in _currLabel.CameraSubjobs)
             {
-                sb.AppendLine($"\tSubJob -> {tool.SubjobName}");
-                sb.AppendLine($"\tTool Name -> {tool.ToolName}");
-                sb.AppendLine($"\tExpected Result -> {tool.Value}");
-                sb.AppendLine($"\teDHR Tag -> {tool.Tag}");
-                sb.AppendLine($"\tType -> {tool.Type.ToString()}");
-                sb.AppendLine();
-            }
-            MiniPreview.Text = sb.ToString();
-            _currPreview = sb.ToString();
-        }
-
-        private void FillDisplay()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Current Hcat -> " + _currHcat);
-
-            foreach (string line in _currData)
-            {
-                string[] fields = line.Split(',');
-                if (fields.Length < 1)
+                foreach (Tool t in sj.Tools)
                 {
-                    continue;
-                }
-                if (fields.Length != 7)
-                {
-                    MessageBox.Show("Error: File format not as expected.");
-                    return;
-                }
-                if (fields[0] == _currPartNum)
-                {
-                    _currItemDescription = fields[0];
-                    ItemDescription.Text = fields[1];
-                    _currCameraJob = fields[5];
-                    CameraJob.Text = fields[5];
-                    _currWorkingPose = fields[4];
-                    WorkingPose.Text = fields[4].Replace(';', ',');
-                    _currApproachSide = fields[2];
-                    ApproachSide.Text = fields[2];
-                    _currPounceRegion = fields[3];
-                    PounceRegion.Text = fields[3];
-
-                    sb.AppendLine($"Part Number -> {fields[0]}");
-                    sb.AppendLine($"Item Description -> {fields[1]}");
-                    sb.AppendLine($"Camera Job -> {fields[5]}");
-                    sb.AppendLine($"Working Pose -> {fields[4].Replace(';', ',')}");
-                    sb.AppendLine($"Approach Side -> {fields[2]}");
-                    sb.AppendLine($"Pounce Region -> {fields[3]}");
-                    sb.AppendLine($"Inspection Details:");
-                    string[] details = fields[6].Split(';');
-
-                    foreach (string str in details)
-                    {
-                        string[] results = str.Split(':');
-                        sb.AppendLine($"\tSubJob Name -> {results[0]}");
-                        sb.AppendLine($"\tTool Name -> {results[1]}");
-                        sb.AppendLine($"\tExpected Result -> {results[2]}");
-                        sb.AppendLine($"\teDHR Tag -> {results[3]}");
-                        sb.AppendLine($"\tType -> {results[4]}");
-                        sb.AppendLine();
-                        _currTools.Add(new Tool(results[0], results[1], results[2], results[3], results[4]));
-                    }
+                    sb.AppendLine($"\tSubJob Name -> {t.SubjobName}");
+                    sb.AppendLine($"\tTool Name -> {t.ToolName}");
+                    sb.AppendLine($"\tExpected Result -> {t.Value}");
+                    sb.AppendLine($"\teDHR Tag -> {t.Tag}");
+                    sb.AppendLine($"\tType -> {t.Type}");
                     sb.AppendLine();
                 }
             }
             MiniPreview.Text = sb.ToString();
-            _currPreview = sb.ToString();
         }
 
-        private string[] GetFileData(string Hcat)
+        private void AddToolBtn_Click(object sender, EventArgs e)
         {
-            return File.ReadAllLines($"{_currPath}\\{Hcat}.txt", Encoding.UTF8);
-        }
-
-        private void AddTagBtn_Click(object sender, EventArgs e)
-        {
-            if (EmptyFields())
+            if (CheckEmptyFields())
             {
                 MessageBox.Show("Complete Empty Fields before adding.");
                 return;
             }
+            if (ToolExists(ToolName.Text.Trim()))
+            {
+                MessageBox.Show($"Tool Name: {ToolName.Text.Trim()} already exists in the current label.");
+                return;
+            }
             Tool newTool = new Tool(SubJobName.Text.Trim(), ToolName.Text.Trim(), ToolResult.Text.Trim(), EdhrTag.Text.Trim(), TypeCmb.SelectedIndex);
+            bool exists = false;
+            for (int i = 0; i < _currLabel.CameraSubjobs.Count; ++i)
+            {
+                if (_currLabel.CameraSubjobs[i].JobName.ToLower() == SubJobName.Text.Trim().ToLower())
+                {
+                    for (int j = 0; j < _currLabel.CameraSubjobs[i].Tools.Count; ++j)
+                    {
+                        if (_currLabel.CameraSubjobs[i].Tools[j].ToolName.ToLower() == SubJobName.Text.Trim().ToLower())
+                        {
+                            DialogResult result = MessageBox.Show($"Tool {ToolName.Text.Trim()} already exists, modify existing tool?", "Confirmation", MessageBoxButtons.YesNoCancel);
+                            if (result == DialogResult.Yes)
+                            {
+                                _currLabel.CameraSubjobs[i].Tools.RemoveAt(j);
+                                _currLabel.CameraSubjobs.Add(new SubJob(SubJobName.Text.Trim(), newTool));
+                                _newTools = true;
+                                ClearTool();
+                                UpdatePreview();
+                                return;
+                            }
+                            else if (result == DialogResult.No)
+                            {
+                                ClearTool();
+                            }
+                            else
+                            {
+                                SubJobName.Focus();
+                            }
+                        }
+                    }
 
-            _currTools.Add(newTool);
-            _currPartNum = PartNumber.Text.Trim();
-            _currItemDescription = ItemDescription.Text.Trim();
-            _currApproachSide = ApproachSide.Text.Trim();
-            _currPounceRegion = PounceRegion.Text.Trim();
-            _currWorkingPose = WorkingPose.Text.Trim();
-            _currCameraJob = CameraJob.Text.Trim();
+                    _currLabel.CameraSubjobs[i].Tools.Add(newTool);
+                    exists = true;
+                    _newTools = true;
+                    break;
+                }
+            }
 
+            if (!exists)
+            {
+                DialogResult result = MessageBox.Show($"Subjob: \"{SubJobName.Text.Trim()}\" does not exist yet, add new subjob?", "Confirmation", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes)
+                {
+                    _currLabel.CameraSubjobs.Add(new SubJob(SubJobName.Text.Trim(), newTool));
+                    _newTools = true;
+                    ClearTool();
+                }
+                else if (result == DialogResult.No)
+                {
+                    ClearTool();
+                }
+                else
+                {
+                    SubJobName.Focus();
+                }
+            }
             UpdatePreview();
+        }
+
+        private bool ToolExists(string toolName)
+        {
+            foreach (SubJob sj in _currLabel.CameraSubjobs)
+            {
+                foreach (Tool t in sj.Tools)
+                {
+                    if (t.ToolName.ToLower() == ToolName.Text.Trim().ToLower())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void ClearTool()
+        {
             SubJobName.Text = "";
             ToolName.Text = "";
             ToolResult.Text = "";
@@ -339,92 +310,184 @@ namespace GEGUI
             if (ItemDescription.Text.Trim() == "" || CameraJob.Text.Trim() == "" || ApproachSide.Text.Trim() == "" ||
                 PounceRegion.Text.Trim() == "")
             {
-                MessageBox.Show("Complete empty fields before submitting data.");
+                MessageBox.Show("Complete empty fields before submitting data.", "Empty Fields");
+                return;
             }
 
-            if (_currTools.Count < 1)
+            if (!_newTools)
             {
-                MessageBox.Show("No new tools added, please ensure you have selected the Add Tag button.");
-            }
-
-            string filePath = _currPath + '\\' + _currHcat + ".txt";
-            // need create file if does not exist
-            if (!File.Exists(filePath))
-            {
-                File.Create(filePath).Dispose();
-            }
-
-            // string[] lines = File.ReadAllLines(textFile);
-            List<string> data = new List<string>(File.ReadAllLines(filePath));
-            string newLine = "";
-            bool exists = false;
-            for (int i = 0; i < data.Count; ++i)
-            {
-                string[] terms = data[i].Split(',');
-                if (terms[0].ToLower() == _currPartNum.ToLower())
+                DialogResult result = MessageBox.Show("No new tools added, please ensure you have selected the Add button to add new tools. Save anyways?", "No new tools added", MessageBoxButtons.YesNo);
+                if (result == DialogResult.No)
                 {
-                    exists = true;
-                    newLine = data[i];
-                    data.RemoveAt(i);
-                    break;
+                    return;
                 }
             }
 
-            // hcat exists but this is additional part number (append to existing file)
-            if (exists)
+            if (ItemDescription.Text.Trim().ToLower() != _currLabel.ItemDescription.ToLower())
             {
-                // Append data to existing line
-                StringBuilder sb = new StringBuilder(newLine);
-                sb.Append(";");
-                for (int i = 0; i < _currTools.Count; ++i)
+                DialogResult result = MessageBox.Show($"Item Description has changed from {_currLabel.ItemDescription} to {ItemDescription.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
                 {
-                    sb.Append(_currTools[i].ToString());
-                    if (i != _currTools.Count - 1)
+                    _currLabel.ItemDescription = ItemDescription.Text.Trim();
+                }
+                else
+                {
+                    ItemDescription.Text = _currLabel.ItemDescription;
+                }
+            }
+            if (CameraJob.Text.Trim().ToLower() != _currLabel.CameraJobName.ToLower())
+            {
+                DialogResult result = MessageBox.Show($"Camera Job has changed from {_currLabel.CameraJobName} to {CameraJob.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    _currLabel.CameraJobName = CameraJob.Text.Trim();
+                }
+                else
+                {
+                    CameraJob.Text = _currLabel.CameraJobName;
+                }
+            }
+            if (RobotPose.Text.Trim().ToLower() != _currLabel.RobotPose.ToLower())
+            {
+                DialogResult result = MessageBox.Show($"Working Pose has changed from {_currLabel.RobotPose} to {RobotPose.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    _currLabel.RobotPose = RobotPose.Text.Trim();
+                }
+                else
+                {
+                    RobotPose.Text = _currLabel.RobotPose;
+                }
+            }
+            if (ApproachSide.Text.Trim().ToLower() != _currLabel.ApproachSide.ToLower())
+            {
+                DialogResult result = MessageBox.Show($"Approach Side has been changed from {_currLabel.ApproachSide} to {ApproachSide.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    _currLabel.ApproachSide = ApproachSide.Text.Trim();
+                }
+                else
+                {
+                    ApproachSide.Text = _currLabel.ApproachSide;
+                }
+            }
+            if (PounceRegion.Text.Trim().ToLower() != _currLabel.PounceRegion.ToLower())
+            {
+                DialogResult result = MessageBox.Show($"Pounce Region has been changed from {_currLabel.PounceRegion} to {PounceRegion.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    _currLabel.PounceRegion = PounceRegion.Text.Trim();
+                }
+                else
+                {
+                    PounceRegion.Text = _currLabel.PounceRegion;
+                }
+            }
+
+            int index = LabelExists(_currLabel.PartNumber);
+            if (index  != -1)
+            {
+                _HCAT.Labels.RemoveAt(index);
+            }
+            _HCAT.Labels.Add(_currLabel);
+
+            try
+            {
+                string newPath = _currPath + @"/" + _HCAT.HcatNumber.ToLower() + ".txt";
+                string output = JsonConvert.SerializeObject(_HCAT, Formatting.Indented);
+
+                //write string to file
+                File.WriteAllText(newPath, output);
+
+                // Get current list of data files
+                DataFiles = new List<string>(Directory.GetFiles(_currPath, "*.txt"));
+                MessageBox.Show($"Data added successfully at {_currPath}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Data failed to write to path: {_currPath}, exception: {ex.Message}");
+            }
+        }
+
+        private int LabelExists(string partNumber)
+        {
+            for (int i = 0; i < _HCAT.Labels.Count; ++i)
+            {
+                if (_HCAT.Labels[i].PartNumber.ToLower() == partNumber.ToLower())
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private void RemoveTool_Click(object sender, EventArgs e)
+        {
+            if (ToolRemove.Text.Trim() == "")
+            {
+                MessageBox.Show("Tool Name field empty.");
+                return;
+            }
+
+            for (int i = 0; i < _currLabel.CameraSubjobs.Count; ++i)
+            {
+                for (int j = 0; j < _currLabel.CameraSubjobs[i].Tools.Count; ++j)
+                {
+                    if (_currLabel.CameraSubjobs[i].Tools[j].ToolName.ToLower() == ToolRemove.Text.Trim().ToLower())
                     {
-                        sb.Append(";");
+                        DialogResult result = MessageBox.Show($"Remove Tool: {_currLabel.CameraSubjobs[i].Tools[j].ToolName}?", "Confirmation", MessageBoxButtons.YesNo);
+                        if (result == DialogResult.Yes)
+                        {
+                            _currLabel.CameraSubjobs[i].Tools.RemoveAt(j);
+                        }
+                        ToolRemove.Text = "";
+                        return;
                     }
                 }
+            }
+            MessageBox.Show($"Tool Name: {ToolRemove.Text.Trim()} not found.");
+            ToolRemove.Focus();
+        }
 
-                data.Add(sb.ToString());
+        private void NewPartNumberbtn_Click(object sender, EventArgs e)
+        {
+            PartNumber.ReadOnly = false;
+            SetPartNumberbtn.Enabled = true;
+            PartNumber.Text = "";
+            ItemDescription.Text = "";
+            CameraJob.Text = "";
+            RobotPose.Text = "";
+            ApproachSide.Text = "";
+            PounceRegion.Text = "";
+            ClearTool();
+            MiniPreview.Text = "";
+        }
+
+        private void SetPartNumberbtn_Click(object sender, EventArgs e)
+        {
+            int index = LabelExists(PartNumber.Text.Trim());
+            if (index == -1)
+            {
+                DialogResult result = MessageBox.Show($"Part Number: {PartNumber.Text.Trim()} does not exist yet in the dictionary, continue?", "New Part Number Detected", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    _currLabel = new GE_Label();
+                    _currLabel.Hcat = Hcat.Text.Trim();
+                    _currLabel.PartNumber = PartNumber.Text.Trim();
+                }
+                else
+                {
+                    PartNumber.Focus();
+                    return;
+                }
             }
             else
             {
-                // Create new line
-                StringBuilder sb = new StringBuilder(newLine);
-                sb.Append(_currPartNum);
-                sb.Append(",");
-                sb.Append(_currItemDescription);
-                sb.Append(",");
-                sb.Append(_currApproachSide);
-                sb.Append(",");
-                sb.Append(_currPounceRegion);
-                sb.Append(",");
-                sb.Append(_currWorkingPose.Replace(',', ';'));
-                sb.Append(",");
-                sb.Append(_currCameraJob);
-                sb.Append(",");
-
-                for (int i = 0; i < _currTools.Count; ++i)
-                {
-                    sb.Append(_currTools[i].SubjobName);
-                    sb.Append(":");
-                    sb.Append(_currTools[i].ToolName);
-                    sb.Append(":");
-                    sb.Append(_currTools[i].Value);
-                    sb.Append(":");
-                    sb.Append(_currTools[i].Tag);
-                    sb.Append(":");
-                    sb.Append(_currTools[i].Type.ToString());
-
-                    if (i != _currTools.Count - 1)
-                    {
-                        sb.Append(";");
-                    }
-                }
-                data.Add(sb.ToString());
+                _currLabel = _HCAT.Labels[index];
+                PartNumber.ReadOnly = true;
+                SetPartNumberbtn.Enabled = false;
+                UpdatePreview();
             }
-            File.WriteAllLines(filePath, data);
-            MessageBox.Show($"Data added successfully at {filePath}");
         }
     }
 }

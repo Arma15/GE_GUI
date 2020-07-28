@@ -6,20 +6,41 @@ using System.Threading.Tasks;
 
 namespace GEGUI
 {
+
+    public class HCAT
+    {
+        public string HcatNumber;
+        public List<GE_Label> Labels;
+        public HCAT()
+        {
+            Labels = new List<GE_Label>();
+        }
+    }
+
     public class GE_Label
     {
+        public int NumSubjobs
+        {
+            get
+            {
+                return CameraSubjobs.Count;
+            }
+        }
+        public string Hcat;
+
+        public string EncryptedString;
         /// <summary>
         /// Unique number to identify a specific label found on a GE Product
         /// </summary>
-        public string Label;
+        public string PartNumber;
+        /// <summary>
+        /// Description of the label
+        /// </summary>
+        public string ItemDescription;
         /// <summary>
         /// 7 element robot position, EX: {rotary, j1, j2, j3, j4, j5, j6}
         /// </summary>
-        public List<double> RobotPose;
-        /// <summary>
-        /// Data structure with name of .job and its details
-        /// </summary>
-        public MachineJob CurrentJob;
+        public string RobotPose;
         /// <summary>
         /// EX: Side, Front, Back, etc.
         /// </summary>
@@ -29,12 +50,77 @@ namespace GEGUI
         /// </summary>
         public string PounceRegion;
         /// <summary>
-        /// Can have 1 or more results to send back to edhr
+        /// The full camera job name, ie. GE_Label.job
         /// </summary>
-        public MachineJob CameraJob;
-    }
+        public string CameraJobName;
+        /// <summary>
+        /// Can have 1 or more subjob per label
+        /// </summary>
+        public List<SubJob> CameraSubjobs;
 
-    public class MachineJob
+        public GE_Label()
+        {
+            CameraSubjobs = new List<SubJob>();
+            EncryptedString = "";
+            PartNumber = "";
+            ItemDescription = "";
+            RobotPose = "";
+            ApproachSide = "";
+            PounceRegion = "";
+            CameraJobName = "";
+        }
+
+        /* /// <summary>
+        /// Pose comes in string form as: "{0;90;90;100;90;90;100}"
+        /// </summary>
+        /// <param name="pose"></param>
+        public void AddPose(string pose)
+        {
+            string temp = pose.Trim('{', '}');
+            string[] nums = temp.Split(';');
+            if (temp.Length != 7)
+            {
+                // error in format
+                return;
+            }
+
+            foreach (string doub in nums)
+            {
+                if (double.TryParse(doub, out double num))
+                {
+                    RobotPose.Add(num);
+                }
+                else
+                {
+                    RobotPose.Clear();
+                    return;
+                }
+            }
+        }*/
+
+        public string GetPose()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (double d in RobotPose)
+            {
+                sb.Append(d.ToString());
+            }
+            return sb.ToString();
+        }
+
+        public int GetSubJobIndex(string jobname)
+        {
+            for (int i = 0; i < CameraSubjobs.Count; ++i)
+            {
+                if (CameraSubjobs[i].JobName == jobname)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+    }
+    public class SubJob
     {
         /// <summary>
         /// Name of job file
@@ -44,29 +130,67 @@ namespace GEGUI
         /// List of tools inside that job
         /// </summary>
         public List<Tool> Tools;
+
+        public SubJob()
+        {
+            Tools = new List<Tool>();
+            JobName = "";
+        }
+        public SubJob(string jobname, Tool newtool)
+        {
+            JobName = jobname;
+            Tools = new List<Tool>
+            {
+                newtool
+            };
+        }
     }
 
     public class Tool
     {
+        public string SubjobName;
         public string ToolName;
+        // In some cases can be either 1 or 2 revision numbers accepted, use string split on ':' ?
         public string Value;
         public string Tag;
-        public ToolType Type;
-        
-        public Tool(string name, string val, string tag, int tt)
+        public string Type;
+
+        public Tool()
         {
+            SubjobName = "";
+            ToolName = "";
+            Value = "";
+            Tag = "";
+            Type = "";
+        }
+
+        public Tool(string SubName, string name, string val, string tag, string tt)
+        {
+            SubjobName = SubName;
             ToolName = name;
             Value = val;
             Tag = tag;
-            Type = (ToolType)tt;
+            Type = tt;
+        }
+
+        public Tool(string SubName, string name, string val, string tag, int tt)
+        {
+            SubjobName = SubName;
+            ToolName = name;
+            Value = val;
+            Tag = tag;
+            switch (tt)
+            {
+                case 0:
+                    Type = "PF";
+                    break;
+                case 1:
+                    Type = "OCR";
+                    break;
+                case 2:
+                    Type = "QR";
+                    break;
+            }
         }
     }
-
-    public enum ToolType
-    {
-        PF,
-        OCR,
-        QR
-    }
-
 }
