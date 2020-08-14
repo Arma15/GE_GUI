@@ -10,3 +10,4 @@ C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.GE_GUI.resources
 C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Debug\Newtonsoft.Json.dll
 C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Debug\Newtonsoft.Json.xml
 C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.csproj.CopyComplete
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Debug\GEGUI.csproj.CoreCompileInputs.cache
