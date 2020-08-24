@@ -34,18 +34,14 @@
             this.Hcat = new System.Windows.Forms.TextBox();
             this.AddAllBtn = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.CameraJob = new System.Windows.Forms.TextBox();
             this.ToolResult = new System.Windows.Forms.TextBox();
             this.LoopUpBtn = new System.Windows.Forms.Button();
             this.EdhrTag = new System.Windows.Forms.TextBox();
             this.MiniPreview = new System.Windows.Forms.TextBox();
             this.AddTagBtn = new System.Windows.Forms.Button();
-            this.ApproachSide = new System.Windows.Forms.TextBox();
-            this.PounceRegion = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.TypeCmb = new System.Windows.Forms.ComboBox();
@@ -64,6 +60,9 @@
             this.label15 = new System.Windows.Forms.Label();
             this.NewPartNumberbtn = new System.Windows.Forms.Button();
             this.SetPartNumberbtn = new System.Windows.Forms.Button();
+            this.ApproachCmb = new System.Windows.Forms.ComboBox();
+            this.PounceCmb = new System.Windows.Forms.ComboBox();
+            this.SubjobSetBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // PartNumber
@@ -104,7 +103,7 @@
             // 
             // AddAllBtn
             // 
-            this.AddAllBtn.Location = new System.Drawing.Point(717, 1078);
+            this.AddAllBtn.Location = new System.Drawing.Point(715, 1098);
             this.AddAllBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AddAllBtn.Name = "AddAllBtn";
             this.AddAllBtn.Size = new System.Drawing.Size(198, 46);
@@ -123,16 +122,6 @@
             this.label2.TabIndex = 9;
             this.label2.Text = "Part Number";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 197);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(95, 20);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Camera Job";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -146,7 +135,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(454, 383);
+            this.label5.Location = new System.Drawing.Point(320, 416);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(160, 20);
@@ -156,25 +145,16 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(670, 383);
+            this.label6.Location = new System.Drawing.Point(526, 416);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(85, 20);
             this.label6.TabIndex = 13;
             this.label6.Text = "eDHR Tag";
             // 
-            // CameraJob
-            // 
-            this.CameraJob.Location = new System.Drawing.Point(134, 186);
-            this.CameraJob.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.CameraJob.Name = "CameraJob";
-            this.CameraJob.ReadOnly = true;
-            this.CameraJob.Size = new System.Drawing.Size(452, 26);
-            this.CameraJob.TabIndex = 4;
-            // 
             // ToolResult
             // 
-            this.ToolResult.Location = new System.Drawing.Point(458, 408);
+            this.ToolResult.Location = new System.Drawing.Point(320, 441);
             this.ToolResult.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ToolResult.Name = "ToolResult";
             this.ToolResult.ReadOnly = true;
@@ -194,7 +174,7 @@
             // 
             // EdhrTag
             // 
-            this.EdhrTag.Location = new System.Drawing.Point(670, 408);
+            this.EdhrTag.Location = new System.Drawing.Point(530, 441);
             this.EdhrTag.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.EdhrTag.Name = "EdhrTag";
             this.EdhrTag.ReadOnly = true;
@@ -203,7 +183,7 @@
             // 
             // MiniPreview
             // 
-            this.MiniPreview.Location = new System.Drawing.Point(12, 445);
+            this.MiniPreview.Location = new System.Drawing.Point(12, 477);
             this.MiniPreview.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MiniPreview.Multiline = true;
             this.MiniPreview.Name = "MiniPreview";
@@ -213,7 +193,7 @@
             // 
             // AddTagBtn
             // 
-            this.AddTagBtn.Location = new System.Drawing.Point(12, 403);
+            this.AddTagBtn.Location = new System.Drawing.Point(13, 432);
             this.AddTagBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AddTagBtn.Name = "AddTagBtn";
             this.AddTagBtn.Size = new System.Drawing.Size(114, 35);
@@ -222,28 +202,10 @@
             this.AddTagBtn.UseVisualStyleBackColor = true;
             this.AddTagBtn.Click += new System.EventHandler(this.AddToolBtn_Click);
             // 
-            // ApproachSide
-            // 
-            this.ApproachSide.Location = new System.Drawing.Point(134, 266);
-            this.ApproachSide.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.ApproachSide.Name = "ApproachSide";
-            this.ApproachSide.ReadOnly = true;
-            this.ApproachSide.Size = new System.Drawing.Size(162, 26);
-            this.ApproachSide.TabIndex = 6;
-            // 
-            // PounceRegion
-            // 
-            this.PounceRegion.Location = new System.Drawing.Point(134, 302);
-            this.PounceRegion.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.PounceRegion.Name = "PounceRegion";
-            this.PounceRegion.ReadOnly = true;
-            this.PounceRegion.Size = new System.Drawing.Size(162, 26);
-            this.PounceRegion.TabIndex = 7;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(8, 317);
+            this.label7.Location = new System.Drawing.Point(9, 228);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(118, 20);
@@ -253,7 +215,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 277);
+            this.label8.Location = new System.Drawing.Point(8, 192);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(114, 20);
@@ -268,16 +230,16 @@
             "PF",
             "OCR",
             "QR"});
-            this.TypeCmb.Location = new System.Drawing.Point(843, 408);
+            this.TypeCmb.Location = new System.Drawing.Point(700, 439);
             this.TypeCmb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TypeCmb.Name = "TypeCmb";
-            this.TypeCmb.Size = new System.Drawing.Size(70, 28);
+            this.TypeCmb.Size = new System.Drawing.Size(86, 28);
             this.TypeCmb.TabIndex = 12;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(838, 383);
+            this.label9.Location = new System.Drawing.Point(696, 414);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(43, 20);
@@ -286,7 +248,7 @@
             // 
             // ToolName
             // 
-            this.ToolName.Location = new System.Drawing.Point(272, 408);
+            this.ToolName.Location = new System.Drawing.Point(134, 441);
             this.ToolName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ToolName.Name = "ToolName";
             this.ToolName.ReadOnly = true;
@@ -296,7 +258,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(268, 383);
+            this.label10.Location = new System.Drawing.Point(130, 414);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(85, 20);
@@ -323,7 +285,7 @@
             // 
             // RobotPose
             // 
-            this.RobotPose.Location = new System.Drawing.Point(134, 226);
+            this.RobotPose.Location = new System.Drawing.Point(134, 383);
             this.RobotPose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.RobotPose.Name = "RobotPose";
             this.RobotPose.ReadOnly = true;
@@ -333,7 +295,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(8, 237);
+            this.label12.Location = new System.Drawing.Point(8, 389);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(107, 20);
@@ -343,7 +305,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(597, 231);
+            this.label13.Location = new System.Drawing.Point(594, 386);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(136, 20);
@@ -353,7 +315,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(134, 383);
+            this.label14.Location = new System.Drawing.Point(9, 353);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(64, 20);
@@ -362,16 +324,16 @@
             // 
             // SubJobName
             // 
-            this.SubJobName.Location = new System.Drawing.Point(134, 407);
+            this.SubJobName.Location = new System.Drawing.Point(134, 347);
             this.SubJobName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.SubJobName.Name = "SubJobName";
             this.SubJobName.ReadOnly = true;
-            this.SubJobName.Size = new System.Drawing.Size(130, 26);
+            this.SubJobName.Size = new System.Drawing.Size(452, 26);
             this.SubJobName.TabIndex = 8;
             // 
             // RemoveTool
             // 
-            this.RemoveTool.Location = new System.Drawing.Point(12, 1057);
+            this.RemoveTool.Location = new System.Drawing.Point(12, 1093);
             this.RemoveTool.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.RemoveTool.Name = "RemoveTool";
             this.RemoveTool.Size = new System.Drawing.Size(114, 56);
@@ -382,7 +344,7 @@
             // 
             // ToolRemove
             // 
-            this.ToolRemove.Location = new System.Drawing.Point(134, 1082);
+            this.ToolRemove.Location = new System.Drawing.Point(138, 1118);
             this.ToolRemove.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ToolRemove.Name = "ToolRemove";
             this.ToolRemove.Size = new System.Drawing.Size(178, 26);
@@ -391,7 +353,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(134, 1057);
+            this.label15.Location = new System.Drawing.Point(134, 1093);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(85, 20);
@@ -422,11 +384,55 @@
             this.SetPartNumberbtn.UseVisualStyleBackColor = true;
             this.SetPartNumberbtn.Click += new System.EventHandler(this.SetPartNumberbtn_Click);
             // 
+            // ApproachCmb
+            // 
+            this.ApproachCmb.Enabled = false;
+            this.ApproachCmb.FormattingEnabled = true;
+            this.ApproachCmb.Items.AddRange(new object[] {
+            "Front",
+            "Back"});
+            this.ApproachCmb.Location = new System.Drawing.Point(134, 184);
+            this.ApproachCmb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.ApproachCmb.Name = "ApproachCmb";
+            this.ApproachCmb.Size = new System.Drawing.Size(104, 28);
+            this.ApproachCmb.TabIndex = 41;
+            // 
+            // PounceCmb
+            // 
+            this.PounceCmb.Enabled = false;
+            this.PounceCmb.FormattingEnabled = true;
+            this.PounceCmb.Items.AddRange(new object[] {
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4"});
+            this.PounceCmb.Location = new System.Drawing.Point(135, 222);
+            this.PounceCmb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PounceCmb.Name = "PounceCmb";
+            this.PounceCmb.Size = new System.Drawing.Size(103, 28);
+            this.PounceCmb.TabIndex = 42;
+            // 
+            // SubjobSetBtn
+            // 
+            this.SubjobSetBtn.Enabled = false;
+            this.SubjobSetBtn.Location = new System.Drawing.Point(594, 347);
+            this.SubjobSetBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.SubjobSetBtn.Name = "SubjobSetBtn";
+            this.SubjobSetBtn.Size = new System.Drawing.Size(81, 26);
+            this.SubjobSetBtn.TabIndex = 43;
+            this.SubjobSetBtn.Text = "Set";
+            this.SubjobSetBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.SubjobSetBtn.UseVisualStyleBackColor = true;
+            this.SubjobSetBtn.Click += new System.EventHandler(this.SubjobSetBtn_Click);
+            // 
             // GE_GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(940, 1148);
+            this.ClientSize = new System.Drawing.Size(937, 1158);
+            this.Controls.Add(this.SubjobSetBtn);
+            this.Controls.Add(this.PounceCmb);
+            this.Controls.Add(this.ApproachCmb);
             this.Controls.Add(this.SetPartNumberbtn);
             this.Controls.Add(this.NewPartNumberbtn);
             this.Controls.Add(this.label15);
@@ -445,8 +451,6 @@
             this.Controls.Add(this.TypeCmb);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.PounceRegion);
-            this.Controls.Add(this.ApproachSide);
             this.Controls.Add(this.AddTagBtn);
             this.Controls.Add(this.MiniPreview);
             this.Controls.Add(this.EdhrTag);
@@ -455,10 +459,8 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.AddAllBtn);
-            this.Controls.Add(this.CameraJob);
             this.Controls.Add(this.Hcat);
             this.Controls.Add(this.ItemDescription);
             this.Controls.Add(this.label1);
@@ -479,18 +481,14 @@
         private System.Windows.Forms.TextBox Hcat;
         private System.Windows.Forms.Button AddAllBtn;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox CameraJob;
         private System.Windows.Forms.TextBox ToolResult;
         private System.Windows.Forms.Button LoopUpBtn;
         private System.Windows.Forms.TextBox EdhrTag;
         private System.Windows.Forms.TextBox MiniPreview;
         private System.Windows.Forms.Button AddTagBtn;
-        private System.Windows.Forms.TextBox ApproachSide;
-        private System.Windows.Forms.TextBox PounceRegion;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox TypeCmb;
@@ -509,6 +507,9 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button NewPartNumberbtn;
         private System.Windows.Forms.Button SetPartNumberbtn;
+        private System.Windows.Forms.ComboBox ApproachCmb;
+        private System.Windows.Forms.ComboBox PounceCmb;
+        private System.Windows.Forms.Button SubjobSetBtn;
     }
 }
 

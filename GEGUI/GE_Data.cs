@@ -23,11 +23,9 @@ namespace GEGUI
         {
             get
             {
-                return CameraSubjobs.Count;
+                return Subjobs.Count;
             }
         }
-        public string Hcat;
-
         public string EncryptedString;
         /// <summary>
         /// Unique number to identify a specific label found on a GE Product
@@ -38,10 +36,6 @@ namespace GEGUI
         /// </summary>
         public string ItemDescription;
         /// <summary>
-        /// 7 element robot position, EX: {rotary, j1, j2, j3, j4, j5, j6}
-        /// </summary>
-        public string RobotPose;
-        /// <summary>
         /// EX: Side, Front, Back, etc.
         /// </summary>
         public string ApproachSide;
@@ -50,24 +44,18 @@ namespace GEGUI
         /// </summary>
         public string PounceRegion;
         /// <summary>
-        /// The full camera job name, ie. GE_Label.job
-        /// </summary>
-        public string CameraJobName;
-        /// <summary>
         /// Can have 1 or more subjob per label
         /// </summary>
-        public List<SubJob> CameraSubjobs;
+        public List<SubJob> Subjobs;
 
         public GE_Label()
         {
-            CameraSubjobs = new List<SubJob>();
+            Subjobs = new List<SubJob>();
             EncryptedString = "";
             PartNumber = "";
             ItemDescription = "";
-            RobotPose = "";
             ApproachSide = "";
             PounceRegion = "";
-            CameraJobName = "";
         }
 
         /* /// <summary>
@@ -98,21 +86,11 @@ namespace GEGUI
             }
         }*/
 
-        public string GetPose()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (double d in RobotPose)
-            {
-                sb.Append(d.ToString());
-            }
-            return sb.ToString();
-        }
-
         public int GetSubJobIndex(string jobname)
         {
-            for (int i = 0; i < CameraSubjobs.Count; ++i)
+            for (int i = 0; i < Subjobs.Count; ++i)
             {
-                if (CameraSubjobs[i].JobName == jobname)
+                if (Subjobs[i].Name == jobname)
                 {
                     return i;
                 }
@@ -125,8 +103,11 @@ namespace GEGUI
         /// <summary>
         /// Name of job file
         /// </summary>
-        public string JobName;
-        /// <summary>
+        public string Name;
+        /// <summary>/// <summary>
+        /// 7 element robot position, EX: {rotary, j1, j2, j3, j4, j5, j6}
+        /// </summary>
+        public string RobotPose;
         /// List of tools inside that job
         /// </summary>
         public List<Tool> Tools;
@@ -134,11 +115,12 @@ namespace GEGUI
         public SubJob()
         {
             Tools = new List<Tool>();
-            JobName = "";
+            Name = "";
+            RobotPose = "";
         }
         public SubJob(string jobname, Tool newtool)
         {
-            JobName = jobname;
+            Name = jobname;
             Tools = new List<Tool>
             {
                 newtool
@@ -148,7 +130,6 @@ namespace GEGUI
 
     public class Tool
     {
-        public string SubjobName;
         public string ToolName;
         // In some cases can be either 1 or 2 revision numbers accepted, use string split on ':' ?
         public string Value;
@@ -157,25 +138,22 @@ namespace GEGUI
 
         public Tool()
         {
-            SubjobName = "";
             ToolName = "";
             Value = "";
             Tag = "";
             Type = "";
         }
 
-        public Tool(string SubName, string name, string val, string tag, string tt)
+        public Tool(string name, string val, string tag, string tt)
         {
-            SubjobName = SubName;
             ToolName = name;
             Value = val;
             Tag = tag;
             Type = tt;
         }
 
-        public Tool(string SubName, string name, string val, string tag, int tt)
+        public Tool(string name, string val, string tag, int tt)
         {
-            SubjobName = SubName;
             ToolName = name;
             Value = val;
             Tag = tag;
