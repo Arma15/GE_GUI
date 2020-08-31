@@ -1,0 +1,12 @@
+C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Release\GEGUI.exe.config
+C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Release\GEGUI.exe
+C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Release\GEGUI.pdb
+C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Release\Newtonsoft.Json.dll
+C:\Users\kflor\source\repos\GEGUI\GEGUI\bin\Release\Newtonsoft.Json.xml
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.GE_GUI.resources
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.Properties.Resources.resources
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.csproj.GenerateResource.cache
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.csproj.CoreCompileInputs.cache
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.csproj.CopyComplete
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.exe
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.pdb

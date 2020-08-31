@@ -63,6 +63,7 @@
             this.ApproachCmb = new System.Windows.Forms.ComboBox();
             this.PounceCmb = new System.Windows.Forms.ComboBox();
             this.SubjobSetBtn = new System.Windows.Forms.Button();
+            this.PoseSetBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // PartNumber
@@ -415,21 +416,35 @@
             // SubjobSetBtn
             // 
             this.SubjobSetBtn.Enabled = false;
-            this.SubjobSetBtn.Location = new System.Drawing.Point(594, 347);
+            this.SubjobSetBtn.Location = new System.Drawing.Point(812, 339);
             this.SubjobSetBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.SubjobSetBtn.Name = "SubjobSetBtn";
-            this.SubjobSetBtn.Size = new System.Drawing.Size(81, 26);
+            this.SubjobSetBtn.Size = new System.Drawing.Size(81, 34);
             this.SubjobSetBtn.TabIndex = 43;
             this.SubjobSetBtn.Text = "Set";
             this.SubjobSetBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.SubjobSetBtn.UseVisualStyleBackColor = true;
             this.SubjobSetBtn.Click += new System.EventHandler(this.SubjobSetBtn_Click);
             // 
+            // PoseSetBtn
+            // 
+            this.PoseSetBtn.Enabled = false;
+            this.PoseSetBtn.Location = new System.Drawing.Point(812, 383);
+            this.PoseSetBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PoseSetBtn.Name = "PoseSetBtn";
+            this.PoseSetBtn.Size = new System.Drawing.Size(81, 34);
+            this.PoseSetBtn.TabIndex = 44;
+            this.PoseSetBtn.Text = "Set";
+            this.PoseSetBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.PoseSetBtn.UseVisualStyleBackColor = true;
+            this.PoseSetBtn.Click += new System.EventHandler(this.PoseSetBtn_Click);
+            // 
             // GE_GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(937, 1158);
+            this.Controls.Add(this.PoseSetBtn);
             this.Controls.Add(this.SubjobSetBtn);
             this.Controls.Add(this.PounceCmb);
             this.Controls.Add(this.ApproachCmb);
@@ -510,6 +525,7 @@
         private System.Windows.Forms.ComboBox ApproachCmb;
         private System.Windows.Forms.ComboBox PounceCmb;
         private System.Windows.Forms.Button SubjobSetBtn;
+        private System.Windows.Forms.Button PoseSetBtn;
     }
 }
 

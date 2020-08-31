@@ -12,7 +12,6 @@ namespace GEGUI
         public bool LookupModel;
         public List<string> DataFiles;
         private bool _newTools;
-        private List<string> _currData;
         private string _currHcat;
         private string _currPartNum;
         private string _currPath;
@@ -24,11 +23,10 @@ namespace GEGUI
         {
             InitializeComponent();
             _HCAT = new HCAT();
-            _currData = new List<string>();
             _currSubJob = new SubJob();
-            FolderPath.Text = @"C:\Users\kflor\OneDrive\Desktop\GEFiles\Hcat_Data";
-            Hcat.Text = "H45601EA";
-            PartNumber.Text = "5778198(E95)";
+            //FolderPath.Text = @"C:\Users\kflor\OneDrive\Desktop\GEFiles\Hcat_Data";
+            //Hcat.Text = "H45601EA";
+            //PartNumber.Text = "5778198(E95)";
         }
 
         private void Model_TextChanged(object sender, EventArgs e)
@@ -64,6 +62,7 @@ namespace GEGUI
                     return;
                 }
 
+                _newTools = false;
                 _currPath = FolderPath.Text.Trim();
                 _currHcat = _HCAT.HcatNumber = Hcat.Text.Trim();
                 _currPartNum = PartNumber.Text.Trim();
@@ -104,12 +103,14 @@ namespace GEGUI
 
                 UpdatePreview();
                 LoopUpBtn.Text = "New Hcat";
+                SubjobSetBtn.Enabled = true;
             }
             else
             {
                 ClearFields();
                 ToggleFields(true);
                 LoopUpBtn.Text = "Lookup";
+                SubjobSetBtn.Enabled = false;
                 _currLabel = null;
             }
         }
@@ -224,56 +225,29 @@ namespace GEGUI
             }
             if (ToolExists(ToolName.Text.Trim()))
             {
-                MessageBox.Show($"Tool Name: {ToolName.Text.Trim()} already exists in the current label.");
-                return;
-            }
-            Tool newTool = new Tool(ToolName.Text.Trim(), ToolResult.Text.Trim(), EdhrTag.Text.Trim(), TypeCmb.SelectedIndex);
-            bool exists = false;
-            // Check current subjob instead *******************************************
-            for (int i = 0; i < _currLabel.Subjobs.Count; ++i)
-            {
-                if (_currLabel.Subjobs[i].Name.ToLower() == SubJobName.Text.Trim().ToLower())
+                DialogResult result = MessageBox.Show($"Tool {ToolName.Text.Trim()} already exists, modify existing tool?", "Confirmation", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes)
                 {
-                    for (int j = 0; j < _currLabel.Subjobs[i].Tools.Count; ++j)
+                    for (int i = 0; i < _currLabel.Subjobs.Count; ++i)
                     {
-                        if (_currLabel.Subjobs[i].Tools[j].ToolName.ToLower() == SubJobName.Text.Trim().ToLower())
+                        if (_currLabel.Subjobs[i].Name.ToLower() == SubJobName.Text.Trim().ToLower())
                         {
-                            DialogResult result = MessageBox.Show($"Tool {ToolName.Text.Trim()} already exists, modify existing tool?", "Confirmation", MessageBoxButtons.YesNoCancel);
-                            if (result == DialogResult.Yes)
+                            for (int j = 0; j < _currLabel.Subjobs[i].Tools.Count; ++j)
                             {
-                                _currLabel.Subjobs[i].Tools.RemoveAt(j);
-                                _currLabel.Subjobs.Add(new SubJob(SubJobName.Text.Trim(), newTool));
-                                _newTools = true;
-                                ClearTool();
-                                UpdatePreview();
-                                return;
-                            }
-                            else if (result == DialogResult.No)
-                            {
-                                ClearTool();
-                            }
-                            else
-                            {
-                                SubJobName.Focus();
+                                if (_currLabel.Subjobs[i].Tools[j].ToolName.ToLower() == SubJobName.Text.Trim().ToLower())
+                                {
+                                    _currLabel.Subjobs[i].Tools[j].Tag = EdhrTag.Text.Trim();
+                                    _currLabel.Subjobs[i].Tools[j].ToolName = ToolName.Text.Trim();
+                                    _currLabel.Subjobs[i].Tools[j].Type = GetType(TypeCmb.SelectedIndex);
+                                    _currLabel.Subjobs[i].Tools[j].Value = ToolResult.Text.Trim();
+                                    _newTools = true;
+                                    ClearTool();
+                                    UpdatePreview();
+                                    return;
+                                }
                             }
                         }
                     }
-
-                    _currLabel.Subjobs[i].Tools.Add(newTool);
-                    exists = true;
-                    _newTools = true;
-                    break;
-                }
-            }
-
-            if (!exists)
-            {
-                DialogResult result = MessageBox.Show($"Subjob: \"{SubJobName.Text.Trim()}\" does not exist yet, add new subjob?", "Confirmation", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Yes)
-                {
-                    _currLabel.Subjobs.Add(new SubJob(SubJobName.Text.Trim(), newTool));
-                    _newTools = true;
-                    ClearTool();
                 }
                 else if (result == DialogResult.No)
                 {
@@ -284,7 +258,27 @@ namespace GEGUI
                     SubJobName.Focus();
                 }
             }
-            UpdatePreview();
+            else
+            {
+                _currSubJob.Tools.Add(new Tool(ToolName.Text.Trim(), ToolResult.Text.Trim(), EdhrTag.Text.Trim(), TypeCmb.SelectedIndex));
+                _newTools = true;
+                UpdatePreview();
+            }
+        }
+
+        private string GetType(int selectedIndex)
+        {
+            switch (selectedIndex)
+            {
+                case 0:
+                    return "PF";
+                case 1:
+                    return "OCR";
+                case 2:
+                    return "QR";
+                default:
+                    return "";
+            }
         }
 
         private bool ToolExists(string toolName)
@@ -293,7 +287,7 @@ namespace GEGUI
             {
                 foreach (Tool t in sj.Tools)
                 {
-                    if (t.ToolName.ToLower() == ToolName.Text.Trim().ToLower())
+                    if (t.ToolName.ToLower() == toolName.ToLower())
                     {
                         return true;
                     }
@@ -380,6 +374,15 @@ namespace GEGUI
                 }
             }
 
+            for (int i = 0; i < _currLabel.Subjobs.Count; ++i)
+            {
+                if (_currLabel.Subjobs[i].Name.ToLower() == _currSubJob.Name.ToLower())
+                {
+                    _currLabel.Subjobs.RemoveAt(i);
+                    _currLabel.Subjobs.Add(_currSubJob);
+                }
+            }
+
             int index = LabelExists(_currLabel.PartNumber);
             if (index  != -1)
             {
@@ -448,6 +451,7 @@ namespace GEGUI
 
         private void NewPartNumberbtn_Click(object sender, EventArgs e)
         {
+            _newTools = false;
             PartNumber.ReadOnly = false;
             SetPartNumberbtn.Enabled = true;
             PartNumber.Text = "";
@@ -467,8 +471,10 @@ namespace GEGUI
                 DialogResult result = MessageBox.Show($"Part Number: {PartNumber.Text.Trim()} does not exist yet in the dictionary, continue?", "New Part Number Detected", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
-                    _currLabel = new GE_Label();
-                    _currLabel.PartNumber = PartNumber.Text.Trim();
+                    _currLabel = new GE_Label
+                    {
+                        PartNumber = PartNumber.Text.Trim()
+                    };
                 }
                 else
                 {
@@ -489,7 +495,14 @@ namespace GEGUI
         {
             if (SubjobSetBtn.Text == "Set")
             {
-                SubJobName.Text = SubJobName.Text.Trim();
+                if (SubJobName.Text.Trim() == "")
+                {
+                    MessageBox.Show("Empty SubJob field.");
+                    return;
+                }
+                SubjobSetBtn.Text = "Modify";
+                RobotPose.ReadOnly = false;
+                PoseSetBtn.Enabled = true;
                 bool found = false;
                 foreach (SubJob sj in _currLabel.Subjobs)
                 {
@@ -499,11 +512,14 @@ namespace GEGUI
                         _currSubJob = sj;
                     }
                 }
+
                 if (found)
                 {
                     SubJobName.ReadOnly = true;
                     RobotPose.Text = _currSubJob.RobotPose;
-                    SubjobSetBtn.Text = "New SubJob";
+                    RobotPose.ReadOnly = true;
+                    PoseSetBtn.Enabled = true;
+                    PoseSetBtn.Text = "Modify";
                 }
                 else
                 {
@@ -511,7 +527,6 @@ namespace GEGUI
                     if (result == DialogResult.Yes)
                     {
                         SubJobName.ReadOnly = true;
-                        SubjobSetBtn.Text = "New SubJob";
                         _currSubJob = new SubJob
                         {
                             Name = SubJobName.Text.Trim()
@@ -525,11 +540,43 @@ namespace GEGUI
             }
             else
             {
+                // Add subjob to _currLabel
+                for (int i = 0; i < _currLabel.Subjobs.Count; ++i)
+                {
+                    if (_currLabel.Subjobs[i].Name.ToLower() == SubJobName.Text.Trim().ToLower())
+                    {
+                        _currLabel.Subjobs[i] = _currSubJob;
+                        SubJobName.Text = "";
+                        RobotPose.Text = "";
+                        SubjobSetBtn.Text = "Set";
+                        return;
+                    }
+                }
+                _currLabel.Subjobs.Add(_currSubJob);
                 SubJobName.Text = "";
                 RobotPose.Text = "";
                 SubjobSetBtn.Text = "Set";
+                RobotPose.Enabled = true;
+                PoseSetBtn.Text = "Set";
+            }
+        }
 
-                // Add subjob to _currLabel
+        private void PoseSetBtn_Click(object sender, EventArgs e)
+        {
+            if (PoseSetBtn.Text == "Set")
+            {
+                if (RobotPose.Text.Trim() == "")
+                {
+                    MessageBox.Show("Empty Working Pose field.");
+                }
+                PoseSetBtn.Text = "Modify";
+                RobotPose.ReadOnly = true;
+                _currSubJob.RobotPose = RobotPose.Text.Trim();
+            }
+            else
+            {
+                PoseSetBtn.Text = "Set";
+                RobotPose.ReadOnly = false;
             }
         }
     }
