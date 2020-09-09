@@ -16,17 +16,16 @@ namespace GEGUI
         private string _currPartNum;
         private string _currPath;
         private GE_Label _currLabel;
-        private SubJob _currSubJob;
+        private string _currSubJob;
         private HCAT _HCAT;
 
         public GE_GUI()
         {
             InitializeComponent();
             _HCAT = new HCAT();
-            _currSubJob = new SubJob();
-            //FolderPath.Text = @"C:\Users\kflor\OneDrive\Desktop\GEFiles\Hcat_Data";
-            //Hcat.Text = "H45601EA";
-            //PartNumber.Text = "5778198(E95)";
+            FolderPath.Text = @"C:\Users\kflor\OneDrive\Desktop\GEFiles\Hcat_Data";
+            Hcat.Text = "H45601EA";
+            PartNumber.Text = "5778198(E95)";
         }
 
         private void Model_TextChanged(object sender, EventArgs e)
@@ -260,8 +259,7 @@ namespace GEGUI
             }
             else
             {
-                _currSubJob.Tools.Add(new Tool(ToolName.Text.Trim(), ToolResult.Text.Trim(), EdhrTag.Text.Trim(), TypeCmb.SelectedIndex));
-                _newTools = true;
+                _currLabel.Subjobs[_currLabel.GetSubJobIndex(_currSubJob)].Tools.Add(new Tool(ToolName.Text.Trim(), ToolResult.Text.Trim(), EdhrTag.Text.Trim(), TypeCmb.SelectedIndex));
                 UpdatePreview();
             }
         }
@@ -311,76 +309,6 @@ namespace GEGUI
             {
                 MessageBox.Show("Complete empty fields before submitting data.", "Empty Fields");
                 return;
-            }
-
-            if (!_newTools)
-            {
-                DialogResult result = MessageBox.Show("No new tools added, please ensure you have selected the Add button to add new tools. Save anyways?", "No new tools added", MessageBoxButtons.YesNo);
-                if (result == DialogResult.No)
-                {
-                    return;
-                }
-            }
-
-            if (ItemDescription.Text.Trim().ToLower() != _currLabel.ItemDescription.ToLower())
-            {
-                DialogResult result = MessageBox.Show($"Item Description has changed from {_currLabel.ItemDescription} to {ItemDescription.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    _currLabel.ItemDescription = ItemDescription.Text.Trim();
-                }
-                else
-                {
-                    ItemDescription.Text = _currLabel.ItemDescription;
-                }
-            }
-            
-            if (RobotPose.Text.Trim().ToLower() != _currSubJob.RobotPose.ToLower())
-            {
-                DialogResult result = MessageBox.Show($"Working Pose has changed from {_currSubJob.RobotPose} to {RobotPose.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    _currSubJob.RobotPose = RobotPose.Text.Trim();
-                }
-                else
-                {
-                    RobotPose.Text = _currSubJob.RobotPose;
-                }
-            }
-
-            if (ApproachCmb.Text.ToLower() != _currLabel.ApproachSide.ToLower())
-            {
-                DialogResult result = MessageBox.Show($"Approach Side has been changed from {_currLabel.ApproachSide} to {ApproachCmb.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    _currLabel.ApproachSide = ApproachCmb.Text;
-                }
-                else
-                {
-                    ApproachCmb.Text = _currLabel.ApproachSide;
-                }
-            }
-
-            if (PounceCmb.Text.Trim().ToLower() != _currLabel.PounceRegion.ToLower())
-            {
-                DialogResult result = MessageBox.Show($"Pounce Region has been changed from {_currLabel.PounceRegion} to {PounceCmb.Text.Trim()}, modify in file too?", "Confirmation", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    _currLabel.PounceRegion = PounceCmb.Text.Trim();
-                }
-                else
-                {
-                    PounceCmb.Text = _currLabel.PounceRegion;
-                }
-            }
-
-            for (int i = 0; i < _currLabel.Subjobs.Count; ++i)
-            {
-                if (_currLabel.Subjobs[i].Name.ToLower() == _currSubJob.Name.ToLower())
-                {
-                    _currLabel.Subjobs.RemoveAt(i);
-                    _currLabel.Subjobs.Add(_currSubJob);
-                }
             }
 
             int index = LabelExists(_currLabel.PartNumber);
@@ -503,20 +431,20 @@ namespace GEGUI
                 SubjobSetBtn.Text = "Modify";
                 RobotPose.ReadOnly = false;
                 PoseSetBtn.Enabled = true;
+                _currSubJob = SubJobName.Text.Trim();
                 bool found = false;
                 foreach (SubJob sj in _currLabel.Subjobs)
                 {
                     if (SubJobName.Text.ToLower() == sj.Name.ToLower())
                     {
                         found = true;
-                        _currSubJob = sj;
                     }
                 }
 
                 if (found)
                 {
                     SubJobName.ReadOnly = true;
-                    RobotPose.Text = _currSubJob.RobotPose;
+                    RobotPose.Text = _currLabel.Subjobs[_currLabel.GetSubJobIndex(_currSubJob)].RobotPose;
                     RobotPose.ReadOnly = true;
                     PoseSetBtn.Enabled = true;
                     PoseSetBtn.Text = "Modify";
@@ -527,10 +455,7 @@ namespace GEGUI
                     if (result == DialogResult.Yes)
                     {
                         SubJobName.ReadOnly = true;
-                        _currSubJob = new SubJob
-                        {
-                            Name = SubJobName.Text.Trim()
-                        };
+                        _currLabel.Subjobs.Add(new SubJob(SubJobName.Text.Trim()));
                     }
                     else
                     {
@@ -540,19 +465,6 @@ namespace GEGUI
             }
             else
             {
-                // Add subjob to _currLabel
-                for (int i = 0; i < _currLabel.Subjobs.Count; ++i)
-                {
-                    if (_currLabel.Subjobs[i].Name.ToLower() == SubJobName.Text.Trim().ToLower())
-                    {
-                        _currLabel.Subjobs[i] = _currSubJob;
-                        SubJobName.Text = "";
-                        RobotPose.Text = "";
-                        SubjobSetBtn.Text = "Set";
-                        return;
-                    }
-                }
-                _currLabel.Subjobs.Add(_currSubJob);
                 SubJobName.Text = "";
                 RobotPose.Text = "";
                 SubjobSetBtn.Text = "Set";
@@ -568,10 +480,11 @@ namespace GEGUI
                 if (RobotPose.Text.Trim() == "")
                 {
                     MessageBox.Show("Empty Working Pose field.");
+                    return;
                 }
+                _currLabel.Subjobs[_currLabel.GetSubJobIndex(_currSubJob)].RobotPose = RobotPose.Text.Trim();
                 PoseSetBtn.Text = "Modify";
                 RobotPose.ReadOnly = true;
-                _currSubJob.RobotPose = RobotPose.Text.Trim();
             }
             else
             {

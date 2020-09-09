@@ -10,3 +10,4 @@ C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.csproj.CoreCompileInpu
 C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.csproj.CopyComplete
 C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.exe
 C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.pdb
+C:\Users\kflor\source\repos\GEGUI\GEGUI\obj\Release\GEGUI.csprojAssemblyReference.cache

@@ -58,34 +58,6 @@ namespace GEGUI
             PounceRegion = "";
         }
 
-        /* /// <summary>
-        /// Pose comes in string form as: "{0;90;90;100;90;90;100}"
-        /// </summary>
-        /// <param name="pose"></param>
-        public void AddPose(string pose)
-        {
-            string temp = pose.Trim('{', '}');
-            string[] nums = temp.Split(';');
-            if (temp.Length != 7)
-            {
-                // error in format
-                return;
-            }
-
-            foreach (string doub in nums)
-            {
-                if (double.TryParse(doub, out double num))
-                {
-                    RobotPose.Add(num);
-                }
-                else
-                {
-                    RobotPose.Clear();
-                    return;
-                }
-            }
-        }*/
-
         public int GetSubJobIndex(string jobname)
         {
             for (int i = 0; i < Subjobs.Count; ++i)
@@ -116,6 +88,12 @@ namespace GEGUI
         {
             Tools = new List<Tool>();
             Name = "";
+            RobotPose = "";
+        }
+        public SubJob(string name)
+        {
+            Tools = new List<Tool>();
+            Name = name;
             RobotPose = "";
         }
         public SubJob(string jobname, Tool newtool)
