@@ -23,7 +23,7 @@ namespace GEGUI
         {
             InitializeComponent();
             _HCAT = new HCAT();
-            FolderPath.Text = @"C:\Users\kflor\OneDrive\Desktop\GEFiles\Hcat_Data";
+            //FolderPath.Text = @"C:\Users\kflor\OneDrive\Desktop\GEFiles\Hcat_Data";
             Hcat.Text = "master";
             //PartNumber.Text = "5778198(E95)";
         }
