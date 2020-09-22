@@ -24,8 +24,8 @@ namespace GEGUI
             InitializeComponent();
             _HCAT = new HCAT();
             FolderPath.Text = @"C:\Users\kflor\OneDrive\Desktop\GEFiles\Hcat_Data";
-            Hcat.Text = "H45601EA";
-            PartNumber.Text = "5778198(E95)";
+            Hcat.Text = "master";
+            //PartNumber.Text = "5778198(E95)";
         }
 
         private void Model_TextChanged(object sender, EventArgs e)
@@ -260,6 +260,7 @@ namespace GEGUI
             else
             {
                 _currLabel.Subjobs[_currLabel.GetSubJobIndex(_currSubJob)].Tools.Add(new Tool(ToolName.Text.Trim(), ToolResult.Text.Trim(), EdhrTag.Text.Trim(), TypeCmb.SelectedIndex));
+                ClearTool();
                 UpdatePreview();
             }
         }
@@ -387,6 +388,12 @@ namespace GEGUI
             RobotPose.Text = "";
             ApproachCmb.SelectedIndex = -1;
             PounceCmb.SelectedIndex = -1;
+            SubJobName.Text = "";
+            SubJobName.ReadOnly = false;
+            RobotPose.Text = "";
+            RobotPose.ReadOnly = false;
+            SubjobSetBtn.Text = "Set";
+            PoseSetBtn.Text = "Set";
             ClearTool();
             MiniPreview.Text = "";
         }
@@ -467,9 +474,11 @@ namespace GEGUI
             {
                 SubJobName.Text = "";
                 RobotPose.Text = "";
+                RobotPose.ReadOnly = false;
+                SubJobName.ReadOnly = false;
                 SubjobSetBtn.Text = "Set";
-                RobotPose.Enabled = true;
                 PoseSetBtn.Text = "Set";
+                ClearTool();
             }
         }
 

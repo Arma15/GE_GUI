@@ -108,7 +108,7 @@
             this.AddAllBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AddAllBtn.Name = "AddAllBtn";
             this.AddAllBtn.Size = new System.Drawing.Size(198, 46);
-            this.AddAllBtn.TabIndex = 14;
+            this.AddAllBtn.TabIndex = 13;
             this.AddAllBtn.Text = "Add Data";
             this.AddAllBtn.UseVisualStyleBackColor = true;
             this.AddAllBtn.Click += new System.EventHandler(this.AddAllBtn_Click);
@@ -160,7 +160,7 @@
             this.ToolResult.Name = "ToolResult";
             this.ToolResult.ReadOnly = true;
             this.ToolResult.Size = new System.Drawing.Size(202, 26);
-            this.ToolResult.TabIndex = 10;
+            this.ToolResult.TabIndex = 9;
             // 
             // LoopUpBtn
             // 
@@ -179,8 +179,8 @@
             this.EdhrTag.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.EdhrTag.Name = "EdhrTag";
             this.EdhrTag.ReadOnly = true;
-            this.EdhrTag.Size = new System.Drawing.Size(162, 26);
-            this.EdhrTag.TabIndex = 11;
+            this.EdhrTag.Size = new System.Drawing.Size(250, 26);
+            this.EdhrTag.TabIndex = 10;
             // 
             // MiniPreview
             // 
@@ -194,11 +194,11 @@
             // 
             // AddTagBtn
             // 
-            this.AddTagBtn.Location = new System.Drawing.Point(13, 432);
+            this.AddTagBtn.Location = new System.Drawing.Point(12, 416);
             this.AddTagBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AddTagBtn.Name = "AddTagBtn";
-            this.AddTagBtn.Size = new System.Drawing.Size(114, 35);
-            this.AddTagBtn.TabIndex = 13;
+            this.AddTagBtn.Size = new System.Drawing.Size(114, 51);
+            this.AddTagBtn.TabIndex = 12;
             this.AddTagBtn.Text = "Add";
             this.AddTagBtn.UseVisualStyleBackColor = true;
             this.AddTagBtn.Click += new System.EventHandler(this.AddToolBtn_Click);
@@ -231,16 +231,16 @@
             "PF",
             "OCR",
             "QR"});
-            this.TypeCmb.Location = new System.Drawing.Point(700, 439);
+            this.TypeCmb.Location = new System.Drawing.Point(788, 439);
             this.TypeCmb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TypeCmb.Name = "TypeCmb";
             this.TypeCmb.Size = new System.Drawing.Size(86, 28);
-            this.TypeCmb.TabIndex = 12;
+            this.TypeCmb.TabIndex = 11;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(696, 414);
+            this.label9.Location = new System.Drawing.Point(784, 414);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(43, 20);
@@ -254,7 +254,7 @@
             this.ToolName.Name = "ToolName";
             this.ToolName.ReadOnly = true;
             this.ToolName.Size = new System.Drawing.Size(178, 26);
-            this.ToolName.TabIndex = 9;
+            this.ToolName.TabIndex = 8;
             // 
             // label10
             // 
@@ -291,7 +291,7 @@
             this.RobotPose.Name = "RobotPose";
             this.RobotPose.ReadOnly = true;
             this.RobotPose.Size = new System.Drawing.Size(452, 26);
-            this.RobotPose.TabIndex = 5;
+            this.RobotPose.TabIndex = 7;
             // 
             // label12
             // 
@@ -330,7 +330,7 @@
             this.SubJobName.Name = "SubJobName";
             this.SubJobName.ReadOnly = true;
             this.SubJobName.Size = new System.Drawing.Size(452, 26);
-            this.SubJobName.TabIndex = 8;
+            this.SubJobName.TabIndex = 6;
             // 
             // RemoveTool
             // 
@@ -396,7 +396,7 @@
             this.ApproachCmb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ApproachCmb.Name = "ApproachCmb";
             this.ApproachCmb.Size = new System.Drawing.Size(104, 28);
-            this.ApproachCmb.TabIndex = 41;
+            this.ApproachCmb.TabIndex = 4;
             // 
             // PounceCmb
             // 
@@ -411,7 +411,7 @@
             this.PounceCmb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.PounceCmb.Name = "PounceCmb";
             this.PounceCmb.Size = new System.Drawing.Size(103, 28);
-            this.PounceCmb.TabIndex = 42;
+            this.PounceCmb.TabIndex = 5;
             // 
             // SubjobSetBtn
             // 
